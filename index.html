@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>turn.js翻頁特效</title>
+</head>
+
+<body>
+  <div style="margin: auto;">
+    <button  id="prev">◀前一頁</button>   <button id="next">▶後一頁</button> 
+  </div>
+
+  <div class="flipbook">
+    <div class="hard">終於找到一個不用收錢的範本了<small>~ 曉陽</small></div>
+    <div class="hard"></div>
+    <div>
+      <small>也可以直接放文字</small>
+      <h4>原理</h4>
+      <ol>
+        <li >翻頁都是用pdf轉的一張一張圖片擋，然後點擊/拖曳就會出現翻頁特效換張</li>
+        <li>上方可以做navbar，點擊前一頁後一頁就換圖可以用click搭配指令做出來</li>
+        <li>再做個下載icon，把原本pdf的檔案放下載就好</li>
+        <li>RWD要再細部設定CSS，這個範本沒時間先暫緩</li>
+      </ol>
+     
+    </div>
+    <div>
+      <img src="images/img-1.png" alt="" />
+      <small> 廚師 </small>
+    </div>
+    <div>
+      <img src="images/img-2.png" alt="" />
+      <small> 政治家 </small>
+    </div>
+    <div>
+      <img src="images/img-3.png" alt="" />
+      <small> 督導 </small>
+    </div>
+    <div>
+      <img src="images/img-4.png" alt="" />
+      <small> 評分 </small>
+    </div>
+    <div>
+      <img src="images/img-5.png" alt="" />
+      <small> 拿盾的人 </small>
+    </div>
+    <div class="hard"></div>
+    <div class="hard">Thank You <small>~ HankTheTank</small></div>
+  </div>
+
+  <script src="jquery.js"></script>
+  <script src="turn.js"></script>
+  <script>
+    $(".flipbook").turn({
+  width: 800,
+  height: 500,
+  autoCenter: true,
+  gradients: true,
+  acceleration: true
+});
+
+
+// 點左半部往前翻，右半部往後翻
+$('.flipbook').on('click', function(e) {
+  var width = $(this).width();
+  var offset = $(this).offset();
+  var clickX = e.pageX - offset.left;
+
+  if (clickX < width / 2) {
+    $(this).turn('previous');
+  } else {
+    $(this).turn('next');
+  }
+});
+
+
+//按鈕控制
+$('#prev').on('click', () => $('.flipbook').turn('previous'));
+$('#next').on('click', () => $('.flipbook').turn('next'));
+  </script>
+
+</body>
+
+</html>

@@ -8,6 +8,10 @@
 }
 
 
+img{
+    user-select: none;
+}
+
 ol {
     padding: 30px;
     padding-left: 30px;

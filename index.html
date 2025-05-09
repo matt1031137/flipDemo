@@ -64,13 +64,14 @@
 
 
 // 點左半部往前翻，右半部往後翻
-$('#flipbook').on('click', function(e) {
-  const w = $(this).width();
-  const x = e.pageX - $(this).offset().left;
+$('.flipbook').on('click', function(e) {
+  var width = $(this).width();
+  var offset = $(this).offset();
+  var clickX = e.pageX - offset.left;
 
-  if (x < w * 0.4) {
+  if (clickX < width / 2) {
     $(this).turn('previous');
-  } else if (x > w * 0.6) {
+  } else {
     $(this).turn('next');
   }
 });

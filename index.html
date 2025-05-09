@@ -10,7 +10,7 @@
 
 <body>
   <div style="margin: auto;">
-    <button  id="prev">◀前一頁</button>   <button id="next">▶後一頁</button> 
+    <button  id="prev">◀前頁</button>   <button id="next">次頁▶</button> 
   </div>
 
   <div class="flipbook">
@@ -48,7 +48,7 @@
       <small> 拿盾的人 </small>
     </div>
     <div class="hard"></div>
-    <div class="hard">Thank You <small>~ HankTheTank</small></div>
+    <div class="hard">Thank You</div>
   </div>
 
   <script src="jquery.js"></script>
@@ -64,14 +64,13 @@
 
 
 // 點左半部往前翻，右半部往後翻
-$('.flipbook').on('click', function(e) {
-  var width = $(this).width();
-  var offset = $(this).offset();
-  var clickX = e.pageX - offset.left;
+$('#flipbook').on('click', function(e) {
+  const w = $(this).width();
+  const x = e.pageX - $(this).offset().left;
 
-  if (clickX < width / 2) {
+  if (x < w * 0.4) {
     $(this).turn('previous');
-  } else {
+  } else if (x > w * 0.6) {
     $(this).turn('next');
   }
 });

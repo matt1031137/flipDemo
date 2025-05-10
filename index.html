@@ -95,14 +95,58 @@
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   <script>
-    $(".flipbook").turn({
-      width: 1100,
-      height: 770,
-      autoCenter: true,
+  const A4_RATIO = 210 / 297; // A4 單頁寬高比（約 0.707）
+  const DEFAULT_WIDTH = 1100;
+  const DEFAULT_HEIGHT = 770;
+
+  function resizeFlipbook() {
+    const maxWidth = window.innerWidth * 0.95;
+    const maxHeight = window.innerHeight * 0.95;
+
+    // 預設寬為雙頁寬，高度依比例算
+    let bookWidth = DEFAULT_WIDTH;
+    let bookHeight = bookWidth / (2 * A4_RATIO);
+
+    if (bookHeight > maxHeight) {
+      // 若高超過了，就用高度反推寬
+      bookHeight = maxHeight;
+      bookWidth = 2 * A4_RATIO * bookHeight;
+    }
+
+    if (bookWidth > maxWidth) {
+      // 若高超過了，就用高度反推寬
+      bookWidth = maxWidth;
+      bookHeight = bookWidth/2/A4_RATIO;
+    }
+
+    $('.flipbook').turn('size', bookWidth, bookHeight);
+    $('.flipbook').css({ width: bookWidth + 'px', height: bookHeight + 'px' });
+  }
+
+
+$(document).ready(function () {
+    $('.flipbook').turn({
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT,
+        autoCenter: true,
       gradients: true,
       acceleration: true,
       duration: 2000
     });
+
+    resizeFlipbook(); // 首次設定
+    $(window).on('resize', resizeFlipbook); // 視窗改變時重算
+  });
+
+
+    // $(".flipbook").turn({
+    //   width: 1100,
+    //   height: 770,
+    //   autoCenter: true,
+    //   gradients: true,
+    //   acceleration: true,
+    //   duration: 2000
+    // });
 
 
     let isDragging = false;

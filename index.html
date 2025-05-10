@@ -10,81 +10,128 @@
 
 <body>
   <div style="margin: auto;">
-    <button  id="prev">◀前頁</button>   <button id="next">次頁▶</button> 
+    <button id="prev">◀前頁</button> <button id="next">次頁▶</button>
   </div>
 
   <div class="flipbook">
-    <div class="hard">終於找到一個不用收錢的範本了<small>~ 曉陽</small></div>
-    <div class="hard"></div>
-    <div>
-      <small>也可以直接放文字或影片</small>
-      <h4>原理</h4>
-      <ol>
-        <li>翻頁都是用pdf轉的一張一張圖片檔案，然後點擊/拖曳就會出現翻頁特效換張</li>
-        <li>上方可以做navbar，點擊前一頁後一頁就換圖可以用click搭配指令做出來</li>
-        <li>再做個下載icon，把原本pdf的檔案放下載就好</li>
-        <li>RWD要再細部設定CSS，這個範本沒時間先暫緩</li>
-      </ol>
-     
-    </div>
-    <div>
-      <img src="images/img-1.png" alt="" />
-      <small> 廚師 </small>
-    </div>
-    <div>
-      <img src="images/img-2.png" alt="" />
-      <small> 政治家 </small>
-    </div>
-    <div>
-      <img src="images/img-3.png" alt="" />
-      <small> 督導 </small>
-    </div>
-    <div>
-      <img src="images/img-4.png" alt="" />
-      <small> 評分 </small>
-    </div>
-    <div>
-      <img src="images/img-5.png" alt="" />
-      <small> 拿盾的人 </small>
+    <div class="hard">
+      <img src="./images/000.jpg" alt="">
     </div>
     <div class="hard"></div>
-    <div class="hard">Thank You</div>
+    <div>
+      <img src="./images/001.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/002.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/003.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/004.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/005.webp" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/006.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/007.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/008.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/009.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/010.webp" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/011.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/012.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/013.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+   <div>
+      <img src="./images/014.webp" alt="">
+      <!-- <small> text </small> -->
+    </div>
+  
+   <div>
+      <img src="./images/015.webp" alt="">
+      <!-- <small> text </small> -->
+    </div>
+    <div>
+      <img src="./images/016.jpg" alt="">
+      <!-- <small> text </small> -->
+    </div>
+
+
+    <div class="hard"></div>
+
+    <div class="hard">
+      <img src="./images/999.jpg" alt="">
+    </div>
   </div>
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   <script>
     $(".flipbook").turn({
-  width: 800,
-  height: 500,
-  autoCenter: true,
-  gradients: true,
-  acceleration: true,
-  duration:2500
-});
+      width: 1100,
+      height: 770,
+      autoCenter: true,
+      gradients: true,
+      acceleration: true,
+      duration: 2000
+    });
 
 
+    let isDragging = false;
 
+    $('.flipbook')
+      .on('mousedown', function () {
+        isDragging = false;  // 每次點下先預設不是拖曳
+      })
+      .on('mousemove', function () {
+        isDragging = true;   // 如果滑動了，判斷為拖曳
+      })
+      .on('mouseup', function (e) {
+        if (!isDragging) {
+          // 只有在沒有拖曳時才執行 click 翻頁邏輯
+          const width = $(this).width();
+          const offset = $(this).offset();
+          const clickX = e.pageX - offset.left;
 
+          if (clickX < width / 2) {
+            $(this).turn('previous');
+          } else {
+            $(this).turn('next');
+          }
+        }
+      });
 
-
-// 點左半部往前翻，右半部往後翻
-$('.flipbook').on('click', function(e) {
-  var width = $(this).width();
-  var offset = $(this).offset();
-  var clickX = e.pageX - offset.left;
-
-  if (clickX < width / 2) {
-    $(this).turn('previous');
-  } else {
-    $(this).turn('next');
-  }
-});
-
-
-//按鈕控制
-$('#prev').on('click', () => $('.flipbook').turn('previous'));
-$('#next').on('click', () => $('.flipbook').turn('next'));
+    //按鈕控制
+    $('#prev').on('click', () => $('.flipbook').turn('previous'));
+    $('#next').on('click', () => $('.flipbook').turn('next'));
   </script>
 
 </body>

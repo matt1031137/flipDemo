@@ -9,12 +9,12 @@
 </head>
 
 <body>
-  <div style="margin: auto;">
-    　　<button id="first">首頁</button>
-    <button id="prev">上一頁</button>
+  <div id="navbar">
+    <button id="first"><i class="fa-solid fa-backward-step"></i></button>
+    <button id="prev"><i class="fa-solid fa-caret-left"></i></button>
     <span id="page-info">2-3 / 18</span>
-    <button id="next">下一頁</button>
-    <button id="last">末頁</button>
+    <button id="next"><i class="fa-solid fa-caret-right"></i></button>
+    <button id="last"><i class="fa-solid fa-forward-step"></i></button>
   </div>
 
   <div class="flipbook">
@@ -96,6 +96,10 @@
     </div>
   </div>
 
+
+
+  <!-- 版本6fontawesome -->
+  <script src="https://kit.fontawesome.com/067ca40f1a.js" crossorigin="anonymous"></script>
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   <script>
@@ -104,13 +108,18 @@
     const DEFAULT_HEIGHT = 770;
 
 
-
+    //取得目前寬度
     function getViewportWidth() {
       return document.documentElement.clientWidth;
     }
 
 
-
+    //寬度小於多少改為單頁顯示
+    function getDisplayMode() {
+      return window.innerWidth < 800 ? 'single' : 'double';
+    }
+    
+    //寬度變化的對應
     function resizeFlipbook() {
       const isSingle = getViewportWidth() < 800;
       console.log(getViewportWidth())
@@ -158,44 +167,18 @@
         }
 
 
-
-
-
       // 更新尺寸與模式
       $('.flipbook').turn('size', bookWidth, bookHeight);
       $('.flipbook').turn('display', isSingle ? 'single' : 'double');
       $('.flipbook').css({ width: bookWidth + 'px', height: bookHeight + 'px' });
 
 
-      //更新頁數
+      //更新頁數(先備註掉，目標是寫出)
       //  const currentPage = $('.flipbook').turn('page');   // 當前頁數
       //  const totalPage = $('.flipbook').turn('pages');   // 總頁數
       //  updatePageInfo(currentPage, totalPage);
     }
 
-
-
-    // 初始化
-
-    // $(window).on('load', function () {
-    //   setTimeout(() => {
-    //     $(document).ready(function () {
-    //       $('.flipbook').turn({
-    //         width: DEFAULT_WIDTH,
-    //         height: DEFAULT_HEIGHT,
-    //         autoCenter: true,
-    //         gradients: true,
-    //         acceleration: true,
-    //         duration: 2000,
-    //         display: getDisplayMode(), // 初始模式
-    //         page: 2
-    //       });
-
-    //       resizeFlipbook(); // 首次設定
-    //       $(window).on('resize', resizeFlipbook); // 視窗改變時重算
-    //     });
-    //   }, 100)
-    // })
 
 
     $(document).ready(function () {
@@ -214,11 +197,6 @@
       $(window).on('resize', resizeFlipbook); // 視窗改變時重算
     });
 
-
-    //寬度小於600時改為單頁顯示
-    function getDisplayMode() {
-      return window.innerWidth < 800 ? 'single' : 'double';
-    }
 
     let isDragging = false;
 

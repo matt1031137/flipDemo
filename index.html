@@ -103,29 +103,50 @@
     const DEFAULT_WIDTH = 1100;
     const DEFAULT_HEIGHT = 770;
 
+
+
+    function getViewportWidth() {
+      return document.documentElement.clientWidth;
+    }
+
+
+
     function resizeFlipbook() {
-      const isSingle = window.innerWidth < 600;
+      const isSingle = getViewportWidth() < 800;
+      console.log(getViewportWidth())
+      console.log(isSingle)
+      console.log(window.innerWidth)
       const pages = isSingle ? 1 : 2;
 
 
-      const maxWidth = window.innerWidth * 0.95;
-      const maxHeight = window.innerHeight * 0.95;
+      const maxWidth = getViewportWidth() * 0.95;
+      const maxHeight = getViewportWidth() * 0.95;
 
       // 預設寬為雙頁寬，高度依比例算
       let bookWidth = DEFAULT_WIDTH;
       let bookHeight = bookWidth / (pages * A4_RATIO);
 
-      if (bookHeight > maxHeight) {
-        // 若高超過了，就用高度反推寬
-        bookHeight = maxHeight;
-        bookWidth = pages * A4_RATIO * bookHeight;
-      }
 
-      if (bookWidth > maxWidth) {
-        // 若高寬過了，就用高度反推寬
+      if (!isSingle) {
+        if (bookWidth > maxWidth) {
+          // 若寬過了，就用高度反推寬
+          bookWidth = maxWidth;
+          bookHeight = bookWidth / pages / A4_RATIO;
+        }
+
+
+        if (bookHeight > maxHeight) {
+          bookHeight = maxHeight;
+          bookWidth = pages * A4_RATIO * bookHeight;
+        }
+      } else {
         bookWidth = maxWidth;
         bookHeight = bookWidth / pages / A4_RATIO;
       }
+
+
+
+
 
       // 更新尺寸與模式
       $('.flipbook').turn('size', bookWidth, bookHeight);
@@ -142,25 +163,48 @@
 
 
     // 初始化
-    $(document).ready(function () {
-      $('.flipbook').turn({
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
-        autoCenter: true,
-        gradients: true,
-        acceleration: true,
-        duration: 2000,
-        display: getDisplayMode(), // 初始模式
-        page: 2
-      });
 
-      resizeFlipbook(); // 首次設定
-      $(window).on('resize', resizeFlipbook); // 視窗改變時重算
-    });
+    // $(window).on('load', function () {
+    //   setTimeout(() => {
+    //     $(document).ready(function () {
+    //       $('.flipbook').turn({
+    //         width: DEFAULT_WIDTH,
+    //         height: DEFAULT_HEIGHT,
+    //         autoCenter: true,
+    //         gradients: true,
+    //         acceleration: true,
+    //         duration: 2000,
+    //         display: getDisplayMode(), // 初始模式
+    //         page: 2
+    //       });
+
+    //       resizeFlipbook(); // 首次設定
+    //       $(window).on('resize', resizeFlipbook); // 視窗改變時重算
+    //     });
+    //   }, 100)
+    // })
+
+
+ $(document).ready(function () {
+          $('.flipbook').turn({
+            width: DEFAULT_WIDTH,
+            height: DEFAULT_HEIGHT,
+            autoCenter: true,
+            gradients: true,
+            acceleration: true,
+            duration: 2000,
+            display: getDisplayMode(), // 初始模式
+            page: 2
+          });
+
+          resizeFlipbook(); // 首次設定
+          $(window).on('resize', resizeFlipbook); // 視窗改變時重算
+        });
+
 
     //寬度小於600時改為單頁顯示
     function getDisplayMode() {
-      return window.innerWidth < 600 ? 'single' : 'double';
+      return window.innerWidth < 800 ? 'single' : 'double';
     }
 
     let isDragging = false;
@@ -197,47 +241,6 @@
     });
     $('#prev').on('click', () => $('.flipbook').turn('previous'));
     $('#next').on('click', () => $('.flipbook').turn('next'));
-
-    // 顯示當前頁數 / 總頁數
-    // function updatePageInfo(page, total) {
-    //   const display = $('.flipbook').turn('display');
-    //   const view = $('.flipbook').turn('view'); // 這裡是關鍵！
-    // console.log(view)
-    //   if (display === 'single') {
-    //     $('#page-info').text(`${view[0]} / ${total}`);
-    //   } else {
-    //     const leftPage = view[0] || '';
-    //     const rightPage = view[1] || '';
-
-    //     if (leftPage === 1 && !rightPage) {
-    //       // 封面單頁
-    //       $('#page-info').text(`${1} / ${total}`);
-    //     } else if (page == total) {
-    //       // 封底單頁
-    //       $('#page-info').text(`${leftPage} / ${total}`);
-    //     } else {
-    //       // 雙頁顯示
-    //       $('#page-info').text(`${leftPage}-${rightPage} / ${total}`);
-    //     }
-    //   }
-    // }
-
-
-    // $('.flipbook')
-    //   .on('turning', function (e, page) {
-    //     const total = $(this).turn('pages');
-    //     const view = $('.flipbook').turn('view');
-    //     console.log('翻頁中的',view)
-    //     // updatePageInfo(view[0]+1, view[1]+1);
-    //   })
-    //   .on('turned', function (e, page) {
-    //     const total = $(this).turn('pages');
-    //     const view = $('.flipbook').turn('view');
-    //     console.log('完成翻頁後的',view)
-    //     // updatePageInfo(page, total);
-    //   });
-
-
 
 
     function predictView(page, total, display) {

@@ -38,10 +38,10 @@ body {
 	background: #d3d3d3;
 }
 
-.flipbook {
+/* .flipbook {
     width: 1000px;
     height: 770px;
-}
+} */
 
 .flipbook .hard {
     background:rgb(238, 238, 238) !important;

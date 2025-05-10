@@ -10,14 +10,18 @@
 
 <body>
   <div style="margin: auto;">
-    <button id="prev">◀前頁</button> <button id="next">次頁▶</button>
+　　<button id="first">首頁</button>
+  <button id="prev">上一頁</button>
+  <span id="page-info">1 / 4</span>
+  <button id="next">下一頁</button>
+  <button id="last">末頁</button>
   </div>
 
   <div class="flipbook">
     <div class="hard">
       <img src="./images/000.jpg" alt="">
     </div>
-    <div class="hard"></div>
+    <!-- <div class="hard"></div> -->
     <div>
       <img src="./images/001.jpg" alt="">
       <!-- <small> text </small> -->
@@ -85,7 +89,7 @@
     </div>
 
 
-    <div class="hard"></div>
+    <!-- <div class="hard"></div> -->
 
     <div class="hard">
       <img src="./images/999.jpg" alt="">
@@ -140,6 +144,7 @@ $(document).ready(function () {
       acceleration: true,
       duration: 2000,
       display: getDisplayMode(), // 初始模式
+      page:2
     });
 
     resizeFlipbook(); // 首次設定
@@ -175,13 +180,53 @@ $(document).ready(function () {
         }
       });
 
-    //按鈕控制
-    $('#prev').on('click', () => $('.flipbook').turn('previous'));
-    $('#next').on('click', () => $('.flipbook').turn('next'));
 
 
+// 按鈕控制
+$('#first').on('click', () => $('.flipbook').turn('page', 1));
+$('#last').on('click', () => {
+  const totalPages = $('.flipbook').turn('pages');
+  $('.flipbook').turn('page', totalPages);
+});
+$('#prev').on('click', () => $('.flipbook').turn('previous'));
+$('#next').on('click', () => $('.flipbook').turn('next'));
+
+// 顯示當前頁數 / 總頁數
+function updatePageInfo(page, total) {
+  const display = $('.flipbook').turn('display');
+  
+  if (display === 'single') {
+    $('#page-info').text(`${page} / ${total}`);
+  } else {
+    console.log(page)
+    let leftPage
+    let rightPage
+    if(page == 1){
+      leftPage = 1
+      rightPage = ''      
+    }else 
+    if(page == total){
+       leftPage = ''
+      rightPage = total
+    }else{
+    leftPage = page % 2 === 0 ? `${page}-`  : `${page-1}-`;
+    rightPage = page + 1 <= total ? page + 1 : '';
+    }
+
+    $('#page-info').text(`${leftPage}${rightPage} / ${total}`);
+  }
+}
 
 
+$('.flipbook')
+  .on('turning', function (e, page) {
+    const total = $(this).turn('pages');
+    updatePageInfo(page, total);
+  })
+  .on('turned', function (e, page) {
+    const total = $(this).turn('pages');
+    updatePageInfo(page, total);
+  });
 
 
 

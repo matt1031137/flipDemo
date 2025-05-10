@@ -82,7 +82,7 @@ button:hover{
 
 .flipbook{
     cursor: pointer;
-    overflow:hidden;
+    /* overflow:hidden; */
 }
 
 

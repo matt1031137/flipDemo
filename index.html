@@ -112,7 +112,7 @@
 
 
     function resizeFlipbook() {
-      const isSingle = getViewportWidth() < 600;
+      const isSingle = getViewportWidth() < 800;
       console.log(getViewportWidth())
       console.log(isSingle)
       console.log(window.innerWidth)
@@ -128,21 +128,34 @@
 
 
       if (!isSingle) {
-      
+
         if (bookHeight > maxHeight) {
           bookHeight = maxHeight;
           bookWidth = pages * A4_RATIO * bookHeight;
         }
 
         if (bookWidth > maxWidth) {
-          // 若寬過了，就用高度反推寬
           bookWidth = maxWidth;
           bookHeight = bookWidth / pages / A4_RATIO;
         }
-      } else {
-        bookWidth = maxWidth;
-        bookHeight = bookWidth / pages / A4_RATIO;
-      }
+      } else
+        if (maxWidth > 600) {
+          //中螢幕800接近正方形所以長寬都要限制，避免高超出去
+          if (bookHeight > maxHeight) {
+            bookHeight = maxHeight * 0.95;
+            bookWidth = pages * A4_RATIO * bookHeight;
+          }
+
+          if (bookWidth > maxWidth) {
+            bookWidth = maxWidth * 0.95;
+            bookHeight = bookWidth / pages / A4_RATIO;
+          }
+        } else {
+          //小於600再滿版寬度
+          bookWidth = maxWidth;
+          bookHeight = bookWidth / pages / A4_RATIO;
+
+        }
 
 
 
@@ -185,26 +198,26 @@
     // })
 
 
- $(document).ready(function () {
-          $('.flipbook').turn({
-            width: DEFAULT_WIDTH,
-            height: DEFAULT_HEIGHT,
-            autoCenter: true,
-            gradients: true,
-            acceleration: true,
-            duration: 2000,
-            display: getDisplayMode(), // 初始模式
-            page: 2
-          });
+    $(document).ready(function () {
+      $('.flipbook').turn({
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
+        autoCenter: true,
+        gradients: true,
+        acceleration: true,
+        duration: 2000,
+        display: getDisplayMode(), // 初始模式
+        page: 2
+      });
 
-          resizeFlipbook(); // 首次設定
-          $(window).on('resize', resizeFlipbook); // 視窗改變時重算
-        });
+      resizeFlipbook(); // 首次設定
+      $(window).on('resize', resizeFlipbook); // 視窗改變時重算
+    });
 
 
     //寬度小於600時改為單頁顯示
     function getDisplayMode() {
-      return window.innerWidth < 600 ? 'single' : 'double';
+      return window.innerWidth < 800 ? 'single' : 'double';
     }
 
     let isDragging = false;

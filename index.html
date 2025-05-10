@@ -112,7 +112,7 @@
 
 
     function resizeFlipbook() {
-      const isSingle = getViewportWidth() < 800;
+      const isSingle = getViewportWidth() < 600;
       console.log(getViewportWidth())
       console.log(isSingle)
       console.log(window.innerWidth)
@@ -128,16 +128,16 @@
 
 
       if (!isSingle) {
+      
+        if (bookHeight > maxHeight) {
+          bookHeight = maxHeight;
+          bookWidth = pages * A4_RATIO * bookHeight;
+        }
+
         if (bookWidth > maxWidth) {
           // 若寬過了，就用高度反推寬
           bookWidth = maxWidth;
           bookHeight = bookWidth / pages / A4_RATIO;
-        }
-
-
-        if (bookHeight > maxHeight) {
-          bookHeight = maxHeight;
-          bookWidth = pages * A4_RATIO * bookHeight;
         }
       } else {
         bookWidth = maxWidth;
@@ -204,7 +204,7 @@
 
     //寬度小於600時改為單頁顯示
     function getDisplayMode() {
-      return window.innerWidth < 800 ? 'single' : 'double';
+      return window.innerWidth < 600 ? 'single' : 'double';
     }
 
     let isDragging = false;

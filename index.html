@@ -99,28 +99,35 @@
   const DEFAULT_WIDTH = 1100;
   const DEFAULT_HEIGHT = 770;
 
+
   function resizeFlipbook() {
+
+    const isSingle = window.innerWidth < 600;
+    const pages = isSingle ? 1 : 2;
+
     const maxWidth = window.innerWidth * 0.95;
     const maxHeight = window.innerHeight * 0.95;
 
     // 預設寬為雙頁寬，高度依比例算
     let bookWidth = DEFAULT_WIDTH;
-    let bookHeight = bookWidth / (2 * A4_RATIO);
+    let bookHeight = bookWidth / (pages * A4_RATIO);
 
     if (bookHeight > maxHeight) {
       // 若高超過了，就用高度反推寬
       bookHeight = maxHeight;
-      bookWidth = 2 * A4_RATIO * bookHeight;
+      bookWidth = pages * A4_RATIO * bookHeight;
     }
 
     if (bookWidth > maxWidth) {
-      // 若高超過了，就用高度反推寬
+      // 若高寬過了，就用高度反推寬
       bookWidth = maxWidth;
-      bookHeight = bookWidth/2/A4_RATIO;
+      bookHeight = bookWidth/pages/A4_RATIO;
     }
 
-    $('.flipbook').turn('size', bookWidth, bookHeight);
-    $('.flipbook').css({ width: bookWidth + 'px', height: bookHeight + 'px' });
+      // 更新尺寸與模式
+  $('.flipbook').turn('size', bookWidth, bookHeight);
+  $('.flipbook').turn('display', isSingle ? 'single' : 'double');
+  $('.flipbook').css({ width: bookWidth + 'px', height: bookHeight + 'px' });
   }
 
 
@@ -128,26 +135,21 @@ $(document).ready(function () {
     $('.flipbook').turn({
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
-        autoCenter: true,
+      autoCenter: true,
       gradients: true,
       acceleration: true,
-      duration: 2000
+      duration: 2000,
+      display: getDisplayMode(), // 初始模式
     });
 
     resizeFlipbook(); // 首次設定
     $(window).on('resize', resizeFlipbook); // 視窗改變時重算
   });
 
-
-    // $(".flipbook").turn({
-    //   width: 1100,
-    //   height: 770,
-    //   autoCenter: true,
-    //   gradients: true,
-    //   acceleration: true,
-    //   duration: 2000
-    // });
-
+  //寬度小於600時改為單頁顯示
+  function getDisplayMode() {
+  return window.innerWidth < 600 ? 'single' : 'double';
+}
 
     let isDragging = false;
 
@@ -176,6 +178,14 @@ $(document).ready(function () {
     //按鈕控制
     $('#prev').on('click', () => $('.flipbook').turn('previous'));
     $('#next').on('click', () => $('.flipbook').turn('next'));
+
+
+
+
+
+
+
+    
   </script>
 
 </body>

@@ -10,11 +10,11 @@
 
 <body>
   <div style="margin: auto;">
-　　<button id="first">首頁</button>
-  <button id="prev">上一頁</button>
-  <span id="page-info">1 / 4</span>
-  <button id="next">下一頁</button>
-  <button id="last">末頁</button>
+    　　<button id="first">首頁</button>
+    <button id="prev">上一頁</button>
+    <span id="page-info">2-3 / 18</span>
+    <button id="next">下一頁</button>
+    <button id="last">末頁</button>
   </div>
 
   <div class="flipbook">
@@ -74,12 +74,12 @@
       <img src="./images/013.jpg" alt="">
       <!-- <small> text </small> -->
     </div>
-   <div>
+    <div>
       <img src="./images/014.webp" alt="">
       <!-- <small> text </small> -->
     </div>
-  
-   <div>
+
+    <div>
       <img src="./images/015.webp" alt="">
       <!-- <small> text </small> -->
     </div>
@@ -99,62 +99,69 @@
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   <script>
-  const A4_RATIO = 210 / 297; // A4 單頁寬高比（約 0.707）
-  const DEFAULT_WIDTH = 1100;
-  const DEFAULT_HEIGHT = 770;
+    const A4_RATIO = 210 / 297; // A4 單頁寬高比（約 0.707）
+    const DEFAULT_WIDTH = 1100;
+    const DEFAULT_HEIGHT = 770;
+
+    function resizeFlipbook() {
+      const isSingle = window.innerWidth < 600;
+      const pages = isSingle ? 1 : 2;
 
 
-  function resizeFlipbook() {
+      const maxWidth = window.innerWidth * 0.95;
+      const maxHeight = window.innerHeight * 0.95;
 
-    const isSingle = window.innerWidth < 600;
-    const pages = isSingle ? 1 : 2;
+      // 預設寬為雙頁寬，高度依比例算
+      let bookWidth = DEFAULT_WIDTH;
+      let bookHeight = bookWidth / (pages * A4_RATIO);
 
-    const maxWidth = window.innerWidth * 0.95;
-    const maxHeight = window.innerHeight * 0.95;
+      if (bookHeight > maxHeight) {
+        // 若高超過了，就用高度反推寬
+        bookHeight = maxHeight;
+        bookWidth = pages * A4_RATIO * bookHeight;
+      }
 
-    // 預設寬為雙頁寬，高度依比例算
-    let bookWidth = DEFAULT_WIDTH;
-    let bookHeight = bookWidth / (pages * A4_RATIO);
-
-    if (bookHeight > maxHeight) {
-      // 若高超過了，就用高度反推寬
-      bookHeight = maxHeight;
-      bookWidth = pages * A4_RATIO * bookHeight;
-    }
-
-    if (bookWidth > maxWidth) {
-      // 若高寬過了，就用高度反推寬
-      bookWidth = maxWidth;
-      bookHeight = bookWidth/pages/A4_RATIO;
-    }
+      if (bookWidth > maxWidth) {
+        // 若高寬過了，就用高度反推寬
+        bookWidth = maxWidth;
+        bookHeight = bookWidth / pages / A4_RATIO;
+      }
 
       // 更新尺寸與模式
-  $('.flipbook').turn('size', bookWidth, bookHeight);
-  $('.flipbook').turn('display', isSingle ? 'single' : 'double');
-  $('.flipbook').css({ width: bookWidth + 'px', height: bookHeight + 'px' });
-  }
+      $('.flipbook').turn('size', bookWidth, bookHeight);
+      $('.flipbook').turn('display', isSingle ? 'single' : 'double');
+      $('.flipbook').css({ width: bookWidth + 'px', height: bookHeight + 'px' });
 
 
-$(document).ready(function () {
-    $('.flipbook').turn({
-      width: DEFAULT_WIDTH,
-      height: DEFAULT_HEIGHT,
-      autoCenter: true,
-      gradients: true,
-      acceleration: true,
-      duration: 2000,
-      display: getDisplayMode(), // 初始模式
-      page:2
+      //更新頁數
+      //  const currentPage = $('.flipbook').turn('page');   // 當前頁數
+      //  const totalPage = $('.flipbook').turn('pages');   // 總頁數
+      //  updatePageInfo(currentPage, totalPage);
+    }
+
+
+
+    // 初始化
+    $(document).ready(function () {
+      $('.flipbook').turn({
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
+        autoCenter: true,
+        gradients: true,
+        acceleration: true,
+        duration: 2000,
+        display: getDisplayMode(), // 初始模式
+        page: 2
+      });
+
+      resizeFlipbook(); // 首次設定
+      $(window).on('resize', resizeFlipbook); // 視窗改變時重算
     });
 
-    resizeFlipbook(); // 首次設定
-    $(window).on('resize', resizeFlipbook); // 視窗改變時重算
-  });
-
-  //寬度小於600時改為單頁顯示
-  function getDisplayMode() {
-  return window.innerWidth < 600 ? 'single' : 'double';
-}
+    //寬度小於600時改為單頁顯示
+    function getDisplayMode() {
+      return window.innerWidth < 600 ? 'single' : 'double';
+    }
 
     let isDragging = false;
 
@@ -182,55 +189,96 @@ $(document).ready(function () {
 
 
 
-// 按鈕控制
-$('#first').on('click', () => $('.flipbook').turn('page', 1));
-$('#last').on('click', () => {
-  const totalPages = $('.flipbook').turn('pages');
-  $('.flipbook').turn('page', totalPages);
-});
-$('#prev').on('click', () => $('.flipbook').turn('previous'));
-$('#next').on('click', () => $('.flipbook').turn('next'));
+    // 按鈕控制
+    $('#first').on('click', () => $('.flipbook').turn('page', 1));
+    $('#last').on('click', () => {
+      const totalPages = $('.flipbook').turn('pages');
+      $('.flipbook').turn('page', totalPages);
+    });
+    $('#prev').on('click', () => $('.flipbook').turn('previous'));
+    $('#next').on('click', () => $('.flipbook').turn('next'));
 
-// 顯示當前頁數 / 總頁數
-function updatePageInfo(page, total) {
-  const display = $('.flipbook').turn('display');
-  
-  if (display === 'single') {
-    $('#page-info').text(`${page} / ${total}`);
-  } else {
-    console.log(page)
-    let leftPage
-    let rightPage
-    if(page == 1){
-      leftPage = 1
-      rightPage = ''      
-    }else 
-    if(page == total){
-       leftPage = ''
-      rightPage = total
-    }else{
-    leftPage = page % 2 === 0 ? `${page}-`  : `${page-1}-`;
-    rightPage = page + 1 <= total ? page + 1 : '';
+    // 顯示當前頁數 / 總頁數
+    // function updatePageInfo(page, total) {
+    //   const display = $('.flipbook').turn('display');
+    //   const view = $('.flipbook').turn('view'); // 這裡是關鍵！
+    // console.log(view)
+    //   if (display === 'single') {
+    //     $('#page-info').text(`${view[0]} / ${total}`);
+    //   } else {
+    //     const leftPage = view[0] || '';
+    //     const rightPage = view[1] || '';
+
+    //     if (leftPage === 1 && !rightPage) {
+    //       // 封面單頁
+    //       $('#page-info').text(`${1} / ${total}`);
+    //     } else if (page == total) {
+    //       // 封底單頁
+    //       $('#page-info').text(`${leftPage} / ${total}`);
+    //     } else {
+    //       // 雙頁顯示
+    //       $('#page-info').text(`${leftPage}-${rightPage} / ${total}`);
+    //     }
+    //   }
+    // }
+
+
+    // $('.flipbook')
+    //   .on('turning', function (e, page) {
+    //     const total = $(this).turn('pages');
+    //     const view = $('.flipbook').turn('view');
+    //     console.log('翻頁中的',view)
+    //     // updatePageInfo(view[0]+1, view[1]+1);
+    //   })
+    //   .on('turned', function (e, page) {
+    //     const total = $(this).turn('pages');
+    //     const view = $('.flipbook').turn('view');
+    //     console.log('完成翻頁後的',view)
+    //     // updatePageInfo(page, total);
+    //   });
+
+
+
+
+    function predictView(page, total, display) {
+      if (display === 'single') return [page];
+
+      // 雙頁模式
+      if (page === 1) return [1]; // 封面
+      if (page === total) return [total]; // 封底
+
+      // 其餘情況：根據 page 是奇數或偶數
+      if (page % 2 === 0) {
+        // 偶數頁是左頁
+        return [page, page + 1 <= total ? page + 1 : ''];
+      } else {
+        // 奇數頁是右頁
+        return [page - 1, page];
+      }
     }
 
-    $('#page-info').text(`${leftPage}${rightPage} / ${total}`);
-  }
-}
+    $('.flipbook').on('turning', function (e, page) {
+      const total = $(this).turn('pages');
+      const display = $(this).turn('display');
+      const view = predictView(page, total, display);
+
+      // 顯示頁碼
+      if (display === 'single') {
+        $('#page-info').text(`${view[0]} / ${total}`);
+      } else
+        if (page == 1 || page == total) {
+          $('#page-info').text(`${view[0]} / ${total}`);
+        } else {
+          const [left, right] = view;
+          $('#page-info').text(`${left}-${right} / ${total}`);
+        }
+    });
 
 
-$('.flipbook')
-  .on('turning', function (e, page) {
-    const total = $(this).turn('pages');
-    updatePageInfo(page, total);
-  })
-  .on('turned', function (e, page) {
-    const total = $(this).turn('pages');
-    updatePageInfo(page, total);
-  });
 
 
 
-    
+
   </script>
 
 </body>
